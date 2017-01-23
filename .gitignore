@@ -1,0 +1,12 @@
+.idea
+.DS_Store
+doc/
+data/
+node_modules
+*.json
+!package.json
+npm-debug.log
+
+
+# provisional
+sources/cassandra.js

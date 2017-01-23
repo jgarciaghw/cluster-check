@@ -1,0 +1,12 @@
+{
+  "instances": [
+    {
+      "name": "instance #1",
+      "uri": "mongodb://localhost/benchmarking"
+    },
+    {
+      "name": "instance #1",
+      "uri": "mongodb://localhost/benchmarking?replicaSet=rs0"
+    }
+  ]
+}

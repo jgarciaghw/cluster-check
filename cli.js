@@ -8,8 +8,8 @@ program
     .version('0.0.1')
     .usage('check <source> [options]')
     .option('-c, --config <path-to-config>', 'Path to the config file', "")
-    .option('-t, --timeout <n>', 'Timeout [5000]', 5000)
-    .option('-d, --debug', 'Debug', true)
+    .option('-t, --timeout <n>', 'Timeout [10000]', 10000)
+    .option('-d, --debug', 'Debug', false)
 ;
 
 var valid = false;
@@ -33,6 +33,18 @@ program
                     t.newRow()
                 });
                 console.log(t.printTransposed());
+                console.log("+ Errors");
+                console.log("\n");
+                console.log(prettyjson.render(
+                    result
+                        .filter(function (instance) {
+                            return instance.errors.length;
+                        })
+                        .map(function (instance) {
+                            return {instance: instance.name, errors: instance.errors};
+                        })
+                ));
+                console.log("\n");
             } else {
                 console.log(err ? "ERROR" : "OK");
             }

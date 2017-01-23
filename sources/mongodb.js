@@ -19,13 +19,15 @@ module.exports = function (params) {
             function (instance, callback) {
                 var instance_report = {
                     name: instance.name,
-                    entities: []
+                    entities: [],
+                    errors: []
                 };
                 async.waterfall([
                         function (callback) {
                             var timeout_err = false;
                             var timeout_ctr = setTimeout(function () {
                                 timeout_err = true;
+                                instance_report.errors.push("Connection timeout");
                                 callback({message: "Timeout"});
                             }, timeout);
                             connect(instance, function (err, db) {
@@ -35,6 +37,9 @@ module.exports = function (params) {
                                         entity: "* connection",
                                         count: new Date() - start
                                     });
+                                    if (err) {
+                                        instance_report.errors.push("Connection error");
+                                    }
                                     callback(err, db);
                                 }
                             })
@@ -43,6 +48,7 @@ module.exports = function (params) {
                             var timeout_err = false;
                             var timeout_ctr = setTimeout(function () {
                                 timeout_err = true;
+                                instance_report.errors.push("Entities timeout");
                                 callback({message: "Timeout"});
                             }, timeout);
                             entities(db, function (err, collections) {
@@ -52,6 +58,9 @@ module.exports = function (params) {
                                         entity: "* entities",
                                         count: new Date() - start
                                     });
+                                    if (err) {
+                                        instance_report.errors.push("Entities error");
+                                    }
                                     callback(err, db, collections)
                                 }
                             });
@@ -67,6 +76,9 @@ module.exports = function (params) {
                                         callback(err, count);
                                     })
                                 }, function (err) {
+                                    if (err) {
+                                        instance_report.errors.push(err);
+                                    }
                                     instance_report.entities.splice(2, 0, {
                                         entity: "* total",
                                         count: new Date() - start

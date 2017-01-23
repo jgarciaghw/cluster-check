@@ -1,0 +1,34 @@
+{
+  "name": "cluster-check",
+  "version": "1.0.0",
+  "description": "cluster-check",
+  "main": "cli.js",
+  "dependencies": {
+    "cli-table": "^0.3.1",
+    "easy-table": "^1.0.0",
+    "prettyjson": "^1.2.1",
+    "async": "^2.1.4",
+    "cassandra-driver": "^3.1.6",
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "express": "^4.14.0",
+    "faker": "^3.1.0",
+    "mongodb": "^2.2.18",
+    "multi-progress": "^2.0.0",
+    "mysql": "^2.12.0",
+    "progress": "^1.1.8",
+    "redis": "^2.6.3",
+    "socket.io": "^1.7.2",
+    "sqlite3": "^3.1.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": " "
+  },
+  "author": "",
+  "license": "ISC"
+}

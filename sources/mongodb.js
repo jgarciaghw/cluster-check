@@ -35,12 +35,13 @@ module.exports = function (params) {
                                     clearTimeout(timeout_ctr);
                                     instance_report.entities.push({
                                         entity: "* connection",
-                                        count: new Date() - start
+                                        count: (new Date() - start) + 'ms'
                                     });
                                     if (err) {
-                                        instance_report.errors.push("Connection error");
+                                        instance_report.errors.push(err);
                                     }
                                     callback(err, db);
+
                                 }
                             })
                         },
@@ -56,10 +57,10 @@ module.exports = function (params) {
                                     clearTimeout(timeout_ctr);
                                     instance_report.entities.push({
                                         entity: "* entities",
-                                        count: new Date() - start
+                                        count: (new Date() - start) + 'ms'
                                     });
                                     if (err) {
-                                        instance_report.errors.push("Entities error");
+                                        instance_report.errors.push(err);
                                     }
                                     callback(err, db, collections)
                                 }
@@ -68,24 +69,39 @@ module.exports = function (params) {
                         function (db, collections, callback) {
                             async.each(collections,
                                 function (collection, callback) {
+                                    var timeout_err = false;
+                                    var timeout_ctr = setTimeout(function () {
+                                        timeout_err = true;
+                                        instance_report.errors.push("Count timeout");
+                                        callback({message: "Timeout"});
+                                    }, timeout);
                                     count(db, collection.name, function (err, count) {
-                                        instance_report.entities.push({
-                                            entity: "- " + collection.name,
-                                            count: count
-                                        });
-                                        callback(err, count);
-                                    })
-                                }, function (err) {
+                                        if (!timeout_err) {
+                                            clearTimeout(timeout_ctr);
+                                            if (err) {
+                                                instance_report.errors.push(err);
+                                            }
+                                            instance_report.entities.push({
+                                                entity: "- " + collection.name,
+                                                count: count
+                                            });
+                                            callback(err, count);
+                                        }
+                                    });
+                                },
+                                function (err) {
                                     if (err) {
                                         instance_report.errors.push(err);
                                     }
                                     instance_report.entities.splice(2, 0, {
                                         entity: "* total",
-                                        count: new Date() - start
+                                        count: (new Date() - start) + 'ms'
                                     });
-                                    db.close(function () {
-                                        callback(err);
-                                    });
+                                    setTimeout(function () {
+                                        db.close(function () {
+                                            callback(err);
+                                        });
+                                    }, 1000);
                                 })
                         }
                     ],

@@ -9,7 +9,7 @@ program
     .usage('check <source> [options]')
     .option('-c, --config <path-to-config>', 'Path to the config file', "")
     .option('-t, --timeout <n>', 'Timeout [10000]', 10000)
-    .option('-d, --debug', 'Debug', false)
+    .option('-d, --debug', 'Debug', true)
 ;
 
 var valid = false;
